@@ -1,0 +1,32 @@
+{% extends "auth_base.html" %}
+
+{% block title %}Login{% endblock title %}
+
+{% block content %}
+<h3 class="text-center mb-4">Login</h3>
+<form method="post" novalidate>
+{% csrf_token %}
+    <div class="mb-3">
+        <label for="id_username" class="form-label">Username</label>
+        {{ form.username }}
+        {% if form.username.errors %}
+            <div class="text-danger small">{{ form.username.errors }}</div>
+        {% endif %}
+    </div>
+
+    <div class="mb-3">
+        <label for="id_password" class="form-label">Password</label>
+        {{ form.password }}
+        {% if form.password.errors %}
+            <div class="text-danger small">{{ form.password.errors }}</div>
+        {% endif %}
+    </div>
+
+    <button type="submit" class="btn btn-primary w-100">Login</button>
+</form>
+
+<p class="text-center mt-3">
+    Don’t have an account? 
+    <a href="{% url 'accounts:signup' %}">Sign up here</a>
+</p>
+{% endblock content %}

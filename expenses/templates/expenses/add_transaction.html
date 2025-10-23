@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+
+{% block title %}Add Transaction{% endblock %}
+
+{% block content %}
+
+  <h2 class="mb-4">Add Transaction</h2>
+
+  <form method="post" novalidate>
+    {% csrf_token %}
+    <div class="row g-3">
+      <div class="col-md-6">
+        {{ form.wallet.label_tag }}
+        {{ form.wallet }}
+      </div>
+      <div class="col-md-6">
+        {{ form.category.label_tag }}
+        {{ form.category }}
+      </div>
+      <div class="col-md-6">
+        {{ form.amount.label_tag }}
+        {{ form.amount }}
+      </div>
+      <div class="col-md-6">
+        {{ form.date.label_tag }}
+        {{ form.date }}
+      </div>
+      <div class="col-12">
+        {{ form.description.label_tag }}
+        {{ form.description }}
+      </div>
+    </div>
+
+    <button type="submit" class="btn btn-primary mt-4">Save Transaction</button>
+  </form>
+
+{% endblock %}

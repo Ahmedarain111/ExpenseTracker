@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+
+{% block title %}Add Wallet{% endblock title %}
+
+{% block content %}
+<h2 class="mb-4 fw-semibold">Add Wallet</h2>
+<form method="post" novalidate class="p-4 bg-white shadow-sm rounded-3 border">
+    {% csrf_token %}
+    <div class="row g-3">
+        <div class="col-md-6">
+            <label for="{{ form.name.id_for_label }}" class="form-label">Wallet Name</label>
+            {{ form.name }}
+            {% if form.name.errors %}
+            <div class="text-danger small">{{ form.name.errors.0 }}</div>
+            {% endif %}
+        </div>
+        <div class="col-md-6">
+            <label for="{{ form.balance.id_for_label }}" class="form-label">Initial Balance</label>
+            {{ form.balance }}
+            {% if form.balance.errors %}
+            <div class="text-danger small">{{ form.balance.errors.0 }}</div>
+            {% endif %}
+        </div>
+    </div>
+    <div class="mt-4">
+        <button type="submit" class="btn btn-primary">
+        <i class="bi bi-check-circle"></i> Save Wallet
+        </button>
+        <a href="{% url 'expenses:accounts' %}" class="btn btn-secondary ms-2">
+        <i class="bi bi-arrow-left"></i> Cancel
+        </a>
+    </div>
+</form>
+{% endblock content %}
