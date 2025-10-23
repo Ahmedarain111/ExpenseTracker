@@ -1,2 +1,183 @@
-{% extends "base.html" %} 
+{% extends 'base.html' %}
+{% load static %}
+
 {% block title %}Dashboard{% endblock title %}
+
+{% block styles %}
+<style>
+    .card {
+        border: none;
+        border-radius: 15px;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        background-color: #fff;
+    }
+    .summary-card {
+        text-align: center;
+        padding: 1.5rem 1rem;
+    }
+    .summary-card h3 {
+        font-weight: 700;
+        margin: 0;
+    }
+    .summary-card p {
+        color: #6c757d;
+        margin: 0.25rem 0 0;
+    }
+    .chart-card {
+        padding: 1rem;
+    }
+    .table th {
+        font-weight: 600;
+    }
+</style>
+{% endblock styles %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="row g-3 mb-4">
+        <div class="col-md-3 col-sm-6">
+            <div class="card summary-card bg-success text-white">
+                <h3>{{ total_balance }}</h3>
+                <p>Total Balance</p>
+            </div>
+        </div>
+        <div class="col-md-3 col-sm-6">
+            <div class="card summary-card bg-primary text-white">
+                <h3>{{ total_income }}</h3>
+                <p>Total Income (This Month)</p>
+            </div>
+        </div>
+        <div class="col-md-3 col-sm-6">
+            <div class="card summary-card bg-danger text-white">
+                <h3>{{ total_expenses }}</h3>
+                <p>Total Expenses (This Month)</p>
+            </div>
+        </div>
+        <div class="col-md-3 col-sm-6">
+            <div class="card summary-card bg-warning text-dark">
+                <h3>{{ savings }}</h3>
+                <p>Savings / Remaining</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Charts -->
+    <div class="row g-3 mb-4">
+        <div class="col-lg-6">
+            <div class="card chart-card">
+                <h5 class="mb-3">Income vs Expense (Monthly)</h5>
+                <canvas id="incomeExpenseChart"></canvas>
+            </div>
+        </div>
+        <div class="col-lg-6">
+            <div class="card chart-card">
+                <h5 class="mb-3">Expense Breakdown by Category</h5>
+                <canvas id="expensePieChart"></canvas>
+            </div>
+        </div>
+    </div>
+
+    <!-- Recent Transactions -->
+    <div class="card mb-4 p-3">
+        <h5 class="mb-3"><i class="bi bi-receipt-cutoff me-2"></i>Recent Transactions</h5>
+        <div class="table-responsive">
+            <table class="table table-hover align-middle">
+                <thead>
+                    <tr>
+                        <th>Date</th>
+                        <th>Category</th>
+                        <th>Description</th>
+                        <th>Amount</th>
+                        <th>Type</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for tx in recent_transactions %}
+                    <tr>
+                        <td>{{ tx.date }}</td>
+                        <td>{{ tx.category }}</td>
+                        <td>{{ tx.description }}</td>
+                        <td>{{ tx.amount }}</td>
+                        <td>
+                            {% if tx.type == "Income" %}
+                                <span class="badge bg-success">Income</span>
+                            {% else %}
+                                <span class="badge bg-danger">Expense</span>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr><td colspan="5" class="text-center text-muted">No transactions yet.</td></tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Budget Overview -->
+    <div class="card p-3 mb-4">
+        <h5 class="mb-3"><i class="bi bi-pie-chart-fill me-2"></i>Budget Overview</h5>
+        {% for budget in budgets %}
+            <p class="mb-1 fw-semibold">{{ budget.category }}: {{ budget.spent }} / {{ budget.limit }}</p>
+            <div class="progress mb-3" style="height: 10px;">
+                <div class="progress-bar 
+                    {% if budget.spent > budget.limit %}
+                        bg-danger
+                    {% elif budget.spent > budget.limit|divisibleby:2 %}
+                        bg-warning
+                    {% else %}
+                        bg-success
+                    {% endif %}"
+                    role="progressbar"
+                    style="width: {{ budget.percent }}%;">
+                </div>
+            </div>
+        {% empty %}
+            <p class="text-muted">No budgets set yet.</p>
+        {% endfor %}
+    </div>
+</div>
+
+<!-- Chart.js -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    const incomeExpenseCtx = document.getElementById('incomeExpenseChart');
+    new Chart(incomeExpenseCtx, {
+        type: 'bar',
+        data: {
+            labels: {{ months|safe }},
+            datasets: [
+                {
+                    label: 'Income',
+                    data: {{ income_data|safe }},
+                    backgroundColor: 'rgba(37, 129, 220, 0.7)'
+                },
+                {
+                    label: 'Expenses',
+                    data: {{ expense_data|safe }},
+                    backgroundColor: 'rgba(220, 53, 69, 0.7)'
+                }
+            ]
+        },
+        options: {
+            responsive: true,
+            scales: { y: { beginAtZero: true } }
+        }
+    });
+
+    const expensePieCtx = document.getElementById('expensePieChart');
+    new Chart(expensePieCtx, {
+        type: 'pie',
+        data: {
+            labels: {{ category_labels|safe }},
+            datasets: [{
+                data: {{ category_values|safe }},
+                backgroundColor: [
+                    '#2581dc', '#dc3545', '#ffc107', '#198754', '#17a2b8'
+                ]
+            }]
+        },
+        options: { responsive: true }
+    });
+</script>
+{% endblock content %}
