@@ -4,6 +4,11 @@ from django.contrib.auth.decorators import login_required
 from accounts.models import Profile
 from .forms import TransactionForm, WalletForm
 
+def home_view(request):
+    return render(request, 'home.html')
+
+
+
 @login_required
 def dashboard_view(request):
     return render(request, "expenses/dashboard.html")
