@@ -4,77 +4,77 @@
 
 {% block content %}
 <div class="container">
-  <div class="d-flex justify-content-between align-items-center mb-4">
-    <h3>Your Transactions</h3>
-    <a href="{% url 'expenses:add_transaction' %}" class="btn btn-primary">
-      <i class="bi bi-plus-circle"></i> Add Transaction
-    </a>
-  </div>
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h3>Your Transactions</h3>
+        <a href="{% url 'expenses:add_transaction' %}" class="btn btn-primary" style="background-color: #2581dc;">
+            <i class="bi bi-plus-circle"></i> Add Transaction
+        </a>
+    </div>
 
-  {% if transactions %}
-  <div class="table-responsive">
-    <table class="table table-hover align-middle shadow-sm bg-white rounded">
-      <thead class="table-primary">
-        <tr>
-          <th scope="col">Date</th>
-          <th scope="col">Wallet</th>
-          <th scope="col">Category</th>
-          <th scope="col">Type</th>
-          <th scope="col">Amount</th>
-          <th scope="col">Description</th>
-          <th scope="col" class="text-center">Actions</th>
-        </tr>
-      </thead>
-      <tbody>
-        {% for t in transactions %}
-        <tr>
-          <td>{{ t.date|date:"M d, Y" }}</td>
-          <td>{{ t.wallet.name }}</td>
-          <td>
-            {% if t.category %}
-            {{ t.category.name }}
-            {% else %}
-            —
-            {% endif %}
-          </td>
-          <td>
-            {% if t.type == "income" %}
-            <span class="badge bg-success">Income</span>
-            {% else %}
-            <span class="badge bg-danger">Expense</span>
-            {% endif %}
-          </td>
-          <td class="{% if t.type == 'income' %}text-success{% else %}text-danger{% endif %}">
-            {{ t.signed_amount }}
-          </td>
-          <td>
-            {% if t.description %}
-            {{ t.description }}
-            {% else %}
-            —
-            {% endif %}
-          </td>
-          <td class="text-center">
-            <a href="{% url 'expenses:edit_transaction' t.id %}" class="btn btn-sm btn-outline-primary">
-              Edit
-            </a>
-            <a href="{% url 'expenses:delete_transaction' t.id %}" class="btn btn-sm btn-outline-danger">
-              Delete
-            </a>
-          </td>
-        </tr>
-        {% endfor %}
-      </tbody>
-    </table>
-  </div>
-  {% else %}
-  <div class="text-center py-5 text-muted">
-    <i class="bi bi-inbox fs-1 d-block mb-3"></i>
-    <p>No transactions found. Start by adding one!</p>
-    <a href="{% url 'expenses:add_transaction' %}" class="btn btn-primary">
-      Add Transaction
-    </a>
-  </div>
-  {% endif %}
+    {% if transactions %}
+    <div class="table-responsive">
+        <table class="table table-hover align-middle shadow-sm bg-white rounded">
+            <thead class="table-primary">
+                <tr>
+                    <th scope="col">Date</th>
+                    <th scope="col">Wallet</th>
+                    <th scope="col">Category</th>
+                    <th scope="col">Type</th>
+                    <th scope="col">Amount</th>
+                    <th scope="col">Description</th>
+                    <th scope="col" class="text-center">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for t in transactions %}
+                <tr>
+                    <td>{{ t.date|date:"M d, Y" }}</td>
+                    <td>{{ t.wallet.name }}</td>
+                    <td>
+                        {% if t.category %}
+                        {{ t.category.name }}
+                        {% else %}
+                        —
+                        {% endif %}
+                    </td>
+                    <td>
+                        {% if t.type == "income" %}
+                        <span class="badge bg-success">Income</span>
+                        {% else %}
+                        <span class="badge bg-danger">Expense</span>
+                        {% endif %}
+                    </td>
+                    <td class="{% if t.type == 'income' %}text-success{% else %}text-danger{% endif %}">
+                        {{ t.signed_amount }}
+                    </td>
+                    <td>
+                        {% if t.description %}
+                        {{ t.description }}
+                        {% else %}
+                        —
+                        {% endif %}
+                    </td>
+                    <td class="text-center">
+                        <a href="{% url 'expenses:edit_transaction' t.id %}" class="btn btn-sm btn-outline-primary">
+                            Edit
+                        </a>
+                        <a href="{% url 'expenses:delete_transaction' t.id %}" class="btn btn-sm btn-outline-danger">
+                            Delete
+                        </a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% else %}
+    <div class="text-center py-5 text-muted">
+        <i class="bi bi-inbox fs-1 d-block mb-3"></i>
+        <p>No transactions found. Start by adding one!</p>
+        <a href="{% url 'expenses:add_transaction' %}" class="btn btn-primary">
+            Add Transaction
+        </a>
+    </div>
+    {% endif %}
 </div>
 {% endblock content %}
