@@ -1,4 +1,5 @@
 from django.shortcuts import render, redirect, get_object_or_404
+from django.contrib import messages
 from .models import Transaction, Wallet
 from django.contrib.auth.decorators import login_required
 from accounts.models import Profile
@@ -56,3 +57,28 @@ def add_wallet(request):
         form = WalletForm()
         
     return render(request, "expenses/add_wallet.html", {"form": form})
+
+def edit_transaction(request, transaction_id):
+    transaction = get_object_or_404(Transaction, id=transaction_id, profile=request.user.profile)
+    
+    if request.method == "POST":
+        form = TransactionForm(request.POST, instance=transaction)
+        if form.is_valid():
+            form.save()
+            messages.success(request, "Transaction updated successfully!")
+            return redirect("expenses:transactions")
+    else:
+        form = TransactionForm(instance=transaction)
+
+    return render(request, "expenses/edit_transaction.html", {"form": form, "transaction": transaction})
+
+
+def delete_transaction(request, transaction_id):
+    transaction = get_object_or_404(Transaction, id=transaction_id, profile=request.user.profile)
+
+    if request.method == "POST":
+        transaction.delete()
+        messages.success(request, "Transaction deleted successfully!")
+        return redirect("expenses:transactions")
+
+    return render(request, "expenses/confirm_delete.html", {"transaction": transaction})
