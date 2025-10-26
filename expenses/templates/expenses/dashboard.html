@@ -5,56 +5,118 @@
 
 {% block styles %}
 <style>
-    .card {
+    body {
+        background-color: #f8fafc;
+        color: #1e293b;
+    }
+
+    .dashboard-header {
+        margin-bottom: 2rem;
+    }
+
+    .summary-card {
+        border: none;
+        border-radius: 18px;
+        padding: 1.5rem;
+        text-align: center;
+        color: #fff;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .summary-card:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 6px 16px rgba(0,0,0,0.12);
+    }
+
+    .summary-card i {
+        font-size: 2rem;
+        margin-bottom: 0.75rem;
+    }
+
+    .bg-gradient-success { background: linear-gradient(135deg, #16a34a, #22c55e); }
+    .bg-gradient-primary { background: linear-gradient(135deg, #2563eb, #3b82f6); }
+    .bg-gradient-danger { background: linear-gradient(135deg, #dc2626, #ef4444); }
+    .bg-gradient-warning { background: linear-gradient(135deg, #f59e0b, #fbbf24); color: #1e293b; }
+
+    .chart-card, .table-card, .budget-card {
         border: none;
         border-radius: 15px;
-        box-shadow: 0 2px 8px rgba(0,0,0,0.05);
-        background-color: #fff;
+        background: #fff;
+        padding: 1.5rem;
+        box-shadow: 0 3px 10px rgba(0,0,0,0.05);
     }
-    .summary-card {
-        text-align: center;
-        padding: 1.5rem 1rem;
-    }
-    .summary-card h3 {
-        font-weight: 700;
-        margin: 0;
-    }
-    .summary-card p {
-        color: #6c757d;
-        margin: 0.25rem 0 0;
-    }
-    .chart-card {
-        padding: 1rem;
-    }
-    .table th {
+
+    .chart-card h5, .table-card h5, .budget-card h5 {
         font-weight: 600;
+        color: #1e293b;
+    }
+
+    .table thead th {
+        background-color: #f1f5f9;
+    }
+
+    .table-hover tbody tr:hover {
+        background-color: #f8fafc;
+    }
+
+    .progress {
+        background-color: #e2e8f0;
+        border-radius: 8px;
+        height: 12px;
+    }
+
+    .progress-bar {
+        border-radius: 8px;
+    }
+
+    .section-title {
+        display: flex;
+        align-items: center;
+        font-weight: 600;
+        margin-bottom: 1rem;
+    }
+
+    .section-title i {
+        margin-right: 0.5rem;
+        color: #2563eb;
     }
 </style>
 {% endblock styles %}
 
 {% block content %}
-<div class="container-fluid">
-    <div class="row g-3 mb-4">
+<div class="container-fluid py-3">
+    <div class="dashboard-header text-center">
+        <h2 class="fw-bold mb-1">Welcome to Your Dashboard</h2>
+        <p class="text-muted">Track your income, expenses, and financial goals at a glance.</p>
+    </div>
+
+    <!-- Summary Cards -->
+    <div class="row g-4 mb-4">
         <div class="col-md-3 col-sm-6">
-            <div class="card summary-card bg-success text-white">
+            <div class="summary-card bg-gradient-success">
+                <i class="bi bi-wallet2"></i>
                 <h3>{{ total_balance }}</h3>
                 <p>Total Balance</p>
             </div>
         </div>
         <div class="col-md-3 col-sm-6">
-            <div class="card summary-card bg-primary text-white">
+            <div class="summary-card bg-gradient-primary">
+                <i class="bi bi-graph-up"></i>
                 <h3>{{ total_income }}</h3>
                 <p>Total Income (This Month)</p>
             </div>
         </div>
         <div class="col-md-3 col-sm-6">
-            <div class="card summary-card bg-danger text-white">
+            <div class="summary-card bg-gradient-danger">
+                <i class="bi bi-cash-stack"></i>
                 <h3>{{ total_expenses }}</h3>
                 <p>Total Expenses (This Month)</p>
             </div>
         </div>
         <div class="col-md-3 col-sm-6">
-            <div class="card summary-card bg-warning text-dark">
+            <div class="summary-card bg-gradient-warning">
+                <i class="bi bi-cash-stack"></i>
                 <h3>{{ savings }}</h3>
                 <p>Savings / Remaining</p>
             </div>
@@ -62,24 +124,24 @@
     </div>
 
     <!-- Charts -->
-    <div class="row g-3 mb-4">
+    <div class="row g-4 mb-4">
         <div class="col-lg-6">
-            <div class="card chart-card">
-                <h5 class="mb-3">Income vs Expense (Monthly)</h5>
+            <div class="chart-card">
+                <h5 class="section-title"><i class="bi bi-bar-chart-fill"></i> Income vs Expense</h5>
                 <canvas id="incomeExpenseChart"></canvas>
             </div>
         </div>
         <div class="col-lg-6">
-            <div class="card chart-card">
-                <h5 class="mb-3">Expense Breakdown by Category</h5>
+            <div class="chart-card">
+                <h5 class="section-title"><i class="bi bi-pie-chart-fill"></i> Expense Breakdown</h5>
                 <canvas id="expensePieChart"></canvas>
             </div>
         </div>
     </div>
 
     <!-- Recent Transactions -->
-    <div class="card mb-4 p-3">
-        <h5 class="mb-3"><i class="bi bi-receipt-cutoff me-2"></i>Recent Transactions</h5>
+    <div class="table-card mb-4">
+        <h5 class="section-title"><i class="bi bi-receipt-cutoff"></i> Recent Transactions</h5>
         <div class="table-responsive">
             <table class="table table-hover align-middle">
                 <thead>
@@ -97,9 +159,9 @@
                         <td>{{ tx.date }}</td>
                         <td>{{ tx.category }}</td>
                         <td>{{ tx.description }}</td>
-                        <td>{{ tx.amount }}</td>
+                        <td><strong>{{ tx.amount }}</strong></td>
                         <td>
-                            {% if tx.type == "Income" %}
+                            {% if tx.type == "income" %}
                                 <span class="badge bg-success">Income</span>
                             {% else %}
                                 <span class="badge bg-danger">Expense</span>
@@ -112,29 +174,6 @@
                 </tbody>
             </table>
         </div>
-    </div>
-
-    <!-- Budget Overview -->
-    <div class="card p-3 mb-4">
-        <h5 class="mb-3"><i class="bi bi-pie-chart-fill me-2"></i>Budget Overview</h5>
-        {% for budget in budgets %}
-            <p class="mb-1 fw-semibold">{{ budget.category }}: {{ budget.spent }} / {{ budget.limit }}</p>
-            <div class="progress mb-3" style="height: 10px;">
-                <div class="progress-bar 
-                    {% if budget.spent > budget.limit %}
-                        bg-danger
-                    {% elif budget.spent > budget.limit|divisibleby:2 %}
-                        bg-warning
-                    {% else %}
-                        bg-success
-                    {% endif %}"
-                    role="progressbar"
-                    style="width: {{ budget.percent }}%;">
-                </div>
-            </div>
-        {% empty %}
-            <p class="text-muted">No budgets set yet.</p>
-        {% endfor %}
     </div>
 </div>
 
@@ -150,12 +189,12 @@
                 {
                     label: 'Income',
                     data: {{ income_data|safe }},
-                    backgroundColor: 'rgba(37, 129, 220, 0.7)'
+                    backgroundColor: 'rgba(37, 99, 235, 0.8)'
                 },
                 {
                     label: 'Expenses',
                     data: {{ expense_data|safe }},
-                    backgroundColor: 'rgba(220, 53, 69, 0.7)'
+                    backgroundColor: 'rgba(220, 38, 38, 0.8)'
                 }
             ]
         },
@@ -167,17 +206,18 @@
 
     const expensePieCtx = document.getElementById('expensePieChart');
     new Chart(expensePieCtx, {
-        type: 'pie',
+        type: 'doughnut',
         data: {
             labels: {{ category_labels|safe }},
             datasets: [{
                 data: {{ category_values|safe }},
-                backgroundColor: [
-                    '#2581dc', '#dc3545', '#ffc107', '#198754', '#17a2b8'
-                ]
+                backgroundColor: ['#2563eb','#dc2626','#f59e0b','#16a34a','#0ea5e9','#9333ea']
             }]
         },
-        options: { responsive: true }
+        options: {
+            responsive: true,
+            cutout: '60%'
+        }
     });
 </script>
 {% endblock content %}
