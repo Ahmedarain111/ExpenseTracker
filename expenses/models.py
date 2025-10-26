@@ -7,7 +7,7 @@ class Wallet(models.Model):
     balance = models.DecimalField(max_digits=10, decimal_places=2, default=0) # type: ignore
     
     def __str__(self):
-        return f"{self.profile.user.username} - {self.name} - {self.balance}"
+        return f"{self.name}"
 
 from django.db import models
 
