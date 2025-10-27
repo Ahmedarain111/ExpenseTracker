@@ -13,21 +13,29 @@ def home_view(request):
     return render(request, "home.html")
 
 
+import json
+import calendar
+from datetime import date
+from django.db.models import Sum
+from django.contrib.auth.decorators import login_required
+from django.shortcuts import render
+from .models import Wallet, Transaction, Category
+
+
 @login_required
 def dashboard_view(request):
     today = date.today()
     current_month = today.month
     current_year = today.year
 
+    # --- Summary data ---
     total_balance = Wallet.objects.aggregate(total=Sum("balance"))["total"] or 0
-
     total_income = (
         Transaction.objects.filter(
             category__type="income", date__month=current_month, date__year=current_year
         ).aggregate(total=Sum("amount"))["total"]
         or 0
     )
-
     total_expenses = (
         Transaction.objects.filter(
             category__type="expense", date__month=current_month, date__year=current_year
@@ -37,7 +45,9 @@ def dashboard_view(request):
 
     savings = total_income - total_expenses
 
+    # --- Chart data: Income vs Expense (past 6 months) ---
     months, income_data, expense_data = [], [], []
+
     for i in range(5, -1, -1):
         month_num = (current_month - i - 1) % 12 + 1
         year = current_year if current_month - i > 0 else current_year - 1
@@ -50,7 +60,6 @@ def dashboard_view(request):
             ).aggregate(total=Sum("amount"))["total"]
             or 0
         )
-
         expense_sum = (
             Transaction.objects.filter(
                 category__type="expense", date__month=month_num, date__year=year
@@ -58,11 +67,14 @@ def dashboard_view(request):
             or 0
         )
 
-        income_data.append(income_sum)
-        expense_data.append(expense_sum)
+        # Convert Decimal → float
+        income_data.append(float(income_sum))
+        expense_data.append(float(expense_sum))
 
+    # --- Expense Breakdown (pie chart) ---
     category_labels, category_values = [], []
     categories = Category.objects.filter(type="expense")
+
     for cat in categories:
         spent = (
             Transaction.objects.filter(
@@ -70,27 +82,28 @@ def dashboard_view(request):
             ).aggregate(total=Sum("amount"))["total"]
             or 0
         )
-
         if spent > 0:
             category_labels.append(cat.name)
-            category_values.append(spent)
+            category_values.append(float(spent))  # Convert Decimal → float
 
     recent_transactions = Transaction.objects.order_by("-date")[:10]
 
+    # --- Serialize for JS ---
     context = {
         "total_balance": total_balance,
         "total_income": total_income,
         "total_expenses": total_expenses,
         "savings": savings,
-        "months": months,
-        "income_data": income_data,
-        "expense_data": expense_data,
-        "category_labels": category_labels,
-        "category_values": category_values,
+        "months": json.dumps(months),
+        "income_data": json.dumps(income_data),
+        "expense_data": json.dumps(expense_data),
+        "category_labels": json.dumps(category_labels),
+        "category_values": json.dumps(category_values),
         "recent_transactions": recent_transactions,
     }
 
     return render(request, "expenses/dashboard.html", context)
+
 
 
 @login_required
