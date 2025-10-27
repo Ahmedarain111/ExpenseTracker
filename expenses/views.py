@@ -92,20 +92,30 @@ def dashboard_view(request):
     return render(request, "expenses/dashboard.html", context)
 
 
-@login_required
 def transactions_view(request):
-    profile = get_object_or_404(Profile, user=request.user)
-    user_transactions = Transaction.objects.filter(profile=profile).select_related(
-        "wallet", "category"
-    )
+    transactions = Transaction.objects.filter(profile=request.user.profile)
+    wallets = Wallet.objects.filter(profile=request.user.profile)
 
-    return render(
-        request,
-        "expenses/transactions.html",
-        {
-            "transactions": user_transactions,
-        },
-    )
+    wallet_id = request.GET.get('wallet')
+    sort_option = request.GET.get('sort')
+
+    if wallet_id:
+        transactions = transactions.filter(wallet_id=wallet_id)
+
+    if sort_option == 'amount_asc':
+        transactions = transactions.order_by('amount')
+    elif sort_option == 'amount_desc':
+        transactions = transactions.order_by('-amount')
+    elif sort_option == 'date_asc':
+        transactions = transactions.order_by('date')
+    elif sort_option == 'date_desc':
+        transactions = transactions.order_by('-date')
+
+    return render(request, 'expenses/transactions.html', {
+        'transactions': transactions,
+        'wallets': wallets
+    })
+
 
 
 @login_required

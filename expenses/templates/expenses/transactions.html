@@ -4,11 +4,54 @@
 
 {% block content %}
 <div class="container">
-    <div class="d-flex justify-content-between align-items-center mb-4">
-        <h3>Your Transactions</h3>
-        <a href="{% url 'expenses:add_transaction' %}" class="btn btn-primary" style="background-color: #2581dc;">
-            <i class="bi bi-plus-circle"></i> Add Transaction
-        </a>
+    <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap">
+        <h3 class="mb-2 mb-md-0">Your Transactions</h3>
+        <div class="d-flex gap-2">
+            <button class="btn btn-outline-secondary" type="button" data-bs-toggle="collapse" data-bs-target="#filterSection" aria-expanded="false" aria-controls="filterSection">
+                <i class="bi bi-funnel"></i> Filter / Sort
+            </button>
+            <a href="{% url 'expenses:add_transaction' %}" class="btn btn-primary" style="background-color: #2581dc;">
+                <i class="bi bi-plus-circle"></i> Add Transaction
+            </a>
+        </div>
+    </div>
+
+    <div class="collapse mb-4" id="filterSection">
+        <form method="get" class="card shadow-sm border-0 p-3 bg-white">
+            <div class="row g-3 align-items-end">
+                <div class="col-md-4">
+                    <label for="wallet" class="form-label fw-semibold">Filter by Wallet</label>
+                    <select id="wallet" name="wallet" class="form-select">
+                        <option value="">All Wallets</option>
+                        {% for w in wallets %}
+                            <option value="{{ w.id }}" {% if request.GET.wallet == w.id|stringformat:"s" %}selected{% endif %}>
+                                {{ w.name }}
+                            </option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <div class="col-md-4">
+                    <label for="sort" class="form-label fw-semibold">Sort By</label>
+                    <select id="sort" name="sort" class="form-select">
+                        <option value="">Default (Newest First)</option>
+                        <option value="amount_asc" {% if request.GET.sort == 'amount_asc' %}selected{% endif %}>Amount (Low → High)</option>
+                        <option value="amount_desc" {% if request.GET.sort == 'amount_desc' %}selected{% endif %}>Amount (High → Low)</option>
+                        <option value="date_asc" {% if request.GET.sort == 'date_asc' %}selected{% endif %}>Date (Oldest → Newest)</option>
+                        <option value="date_desc" {% if request.GET.sort == 'date_desc' %}selected{% endif %}>Date (Newest → Oldest)</option>
+                    </select>
+                </div>
+
+                <div class="col-md-4 d-flex gap-2">
+                    <button type="submit" class="btn btn-primary flex-fill">
+                        <i class="bi bi-check2-circle"></i> Apply
+                    </button>
+                    <a href="{% url 'expenses:transactions' %}" class="btn btn-outline-secondary flex-fill">
+                        <i class="bi bi-arrow-clockwise"></i> Reset
+                    </a>
+                </div>
+            </div>
+        </form>
     </div>
 
     {% if transactions %}
@@ -30,13 +73,7 @@
                 <tr>
                     <td>{{ t.date|date:"M d, Y" }}</td>
                     <td>{{ t.wallet.name }}</td>
-                    <td>
-                        {% if t.category %}
-                        {{ t.category.name }}
-                        {% else %}
-                        —
-                        {% endif %}
-                    </td>
+                    <td>{% if t.category %}{{ t.category.name }}{% else %}—{% endif %}</td>
                     <td>
                         {% if t.type == "income" %}
                         <span class="badge bg-success">Income</span>
@@ -47,13 +84,7 @@
                     <td class="{% if t.type == 'income' %}text-success{% else %}text-danger{% endif %}">
                         {{ t.signed_amount }}
                     </td>
-                    <td>
-                        {% if t.description %}
-                        {{ t.description }}
-                        {% else %}
-                        —
-                        {% endif %}
-                    </td>
+                    <td>{% if t.description %}{{ t.description }}{% else %}—{% endif %}</td>
                     <td class="text-center">
                         <a href="{% url 'expenses:edit_transaction' t.id %}" class="btn btn-sm btn-outline-primary">
                             Edit
@@ -71,9 +102,7 @@
     <div class="text-center py-5 text-muted">
         <i class="bi bi-inbox fs-1 d-block mb-3"></i>
         <p>No transactions found. Start by adding one!</p>
-        <a href="{% url 'expenses:add_transaction' %}" class="btn btn-primary">
-            Add Transaction
-        </a>
+        <a href="{% url 'expenses:add_transaction' %}" class="btn btn-primary">Add Transaction</a>
     </div>
     {% endif %}
 </div>
