@@ -4,7 +4,7 @@
 
 {% block content %}
 
-  <h2 class="mb-4">Add Transaction</h2>
+  <h2 class="mb-4" style="color: #2581DC; !important">Add Transaction</h2>
 
   <form method="post" novalidate>
     {% csrf_token %}
@@ -31,7 +31,7 @@
       </div>
     </div>
 
-    <button type="submit" class="btn btn-primary mt-4">Save Transaction</button>
+    <button type="submit" class="btn text-white mt-4" style="background-color: #2581DC;">Save Transaction</button>
   </form>
 
 {% endblock %}
