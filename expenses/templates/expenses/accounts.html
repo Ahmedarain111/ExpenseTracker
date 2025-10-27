@@ -4,15 +4,39 @@
 
 {% block styles %}
 <style>
+    .wallet-card {
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .wallet-card:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 6px 18px rgba(0, 0, 0, 0.1);
+    }
+
 .wallet-card {
-  border-left: 5px solid #2563eb; /* blue accent */
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
 }
 
-.wallet-card:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.1);
+.btn-view:hover {
+  background: linear-gradient(45deg, #1e6cc6, #60a5fa);
+  box-shadow: 0 0 12px rgba(37, 129, 220, 0.7);
 }
+
+
+/* View button color-change animation */
+.btn-view {
+  background-color: #2581dc;
+  color: #fff;
+  border: none;
+  transition: background-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.btn-view:hover {
+  background-color: #1e6cc6; /* darker blue on hover */
+  box-shadow: 0 0 10px rgba(37, 129, 220, 0.6);
+  color: #fff;
+}
+
 </style>
 {% endblock styles %}
 
@@ -20,57 +44,64 @@
 <div class="d-flex justify-content-between align-items-center mb-4">
     <h2 class="fw-semibold">Your Wallets</h2>
     <a href="{% url 'expenses:add_wallet' %}" class="btn text-white" style="background-color: #2581DC">
-      <i class="bi bi-plus-circle"></i> Add Wallet
+        <i class="bi bi-plus-circle"></i> Add Wallet
     </a>
-  </div>
-
-  {% if wallets %}
-    <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-3">
-  {% for w in wallets %}
-  <div class="col">
-    <div class="card border-0 shadow-sm wallet-card h-100">
-      <div class="card-body">
-        <div class="d-flex justify-content-between align-items-center mb-2">
-          <h5 class="card-title text-primary fw-bold mb-0">
-            <i class="bi bi-wallet2 me-1"></i>{{ w.name }}
-          </h5>
-          <span class="badge bg-light text-dark px-3 py-2">
-            <i class="bi bi-cash-coin text-success"></i>
-            <span class="fw-semibold">{{ w.balance }}</span>
-          </span>
-        </div>
-
-        <hr class="my-3">
-
-        <div class="d-flex justify-content-between">
-          <a href="{% url 'expenses:transactions' %}?wallet={{ w.id }}" class="btn btn-sm btn-outline-primary">
-            <i class="bi bi-eye"></i> View
-          </a>
-          <a href="#" class="btn btn-sm btn-outline-danger">
-            <i class="bi bi-trash"></i> Delete
-          </a>
-        </div>
-      </div>
-    </div>
-  </div>
-  {% empty %}
-  <div class="text-center py-5">
-    <i class="bi bi-wallet2 text-secondary fs-1"></i>
-    <p class="text-muted mt-3">You don’t have any wallets yet.</p>
-    <a href="{% url 'expenses:add_wallet' %}" class="btn btn-primary">
-      <i class="bi bi-plus-circle"></i> Add Wallet
-    </a>
-  </div>
-  {% endfor %}
 </div>
 
-  {% else %}
-    <div class="text-center py-5">
-      <i class="bi bi-wallet2 text-secondary" style="font-size: 3rem;"></i>
-      <p class="mt-3 text-muted">You have no wallets yet.</p>
-      <a href="{% url 'expenses:add_wallet' %}" class="btn mt-2" style="background-color: #2581DC;color: white">
-        <i class="bi bi-plus-circle"></i> Create your first wallet
-      </a>
+{% if wallets %}
+<div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-3">
+    {% for w in wallets %}
+    <div class="col">
+        <div class="card wallet-card border-0 shadow-sm h-100 rounded-4 overflow-hidden">
+            <div class="card-body p-4">
+                <div class="d-flex justify-content-between align-items-start mb-3">
+                    <div>
+                        <h5 class="card-title fw-bold mb-1" style="color: #2581DC;">
+                            <i class="bi bi-wallet2 me-2"></i>{{ w.name }}
+                        </h5>
+                        <small class="text-muted">Wallet ID: {{ w.id }}</small>
+                    </div>
+                    <div class="text-end">
+                        <span class="badge bg-light text-dark border px-3 py-2 fs-6 shadow-sm">
+                            <i class="bi bi-cash-coin text-success me-1"></i>
+                            <span class="fw-semibold">{{ w.balance }}</span>
+                        </span>
+                    </div>
+                </div>
+
+                <hr class="my-3">
+
+                <div class="d-flex justify-content-between">
+                    <a href="{% url 'expenses:transactions' %}?wallet={{ w.id }}"
+                        class="btn btn-primary btn-sm px-3 rounded-pill" style="background-color: #2581DC;">
+                        <i class="bi bi-eye me-1"></i> View
+                    </a>
+                    <a href="#" class="btn btn-outline-danger btn-sm px-3 rounded-pill">
+                        <i class="bi bi-trash me-1"></i> Delete
+                    </a>
+                </div>
+            </div>
+        </div>
     </div>
-  {% endif %}
+
+    {% empty %}
+    <div class="text-center py-5">
+        <i class="bi bi-wallet2 text-secondary fs-1"></i>
+        <p class="text-muted mt-3">You don’t have any wallets yet.</p>
+        <a href="{% url 'expenses:add_wallet' %}" class="btn btn-primary">
+            <i class="bi bi-plus-circle"></i> Add Wallet
+        </a>
+    </div>
+    {% endfor %}
+</div>
+
+{% else %}
+<div class="text-center py-5">
+    <i class="bi bi-wallet2 text-secondary" style="font-size: 3rem;"></i>
+    <p class="mt-3 text-muted">You have no wallets yet.</p>
+    <a href="{% url 'expenses:add_wallet' %}" class="btn mt-2" style="background-color: #2581DC;color: white">
+        <i class="bi bi-plus-circle"></i> Create your first wallet
+    </a>
+</div>
+{% endif %}
 {% endblock content %}
