@@ -35,52 +35,55 @@
     transform: translateY(-1px);
 }
 
-.navbar-nav .nav-item {
-    margin: 0 0.5rem;
+.navbar .btn-light:hover {
+    background-color: #f1f5f9;
 }
 
-.navbar-nav .nav-link.active {
-    font-weight: 700;
-    color: #fff !important;
+.navbar-toggler {
+    filter: invert(1);
 }
+
 
     </style>
 </head>
 
 <body class="bg-light d-flex flex-column align-items-center justify-content-center" style="min-height: 100vh; min-width: 100vw">
-    <nav class="navbar navbar-expand-lg navbar-light shadow-sm fixed-top" style="background-color: #2581dc;">
-        <div class="container-fluid">
-            <h2 class="navbar-header text-white">ExpenseTracker</h2>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
-                <ul class="navbar-nav ms-auto align-items-center">
-    <li class="nav-item mx-2">
-        <a class="nav-link text-white fw-semibold position-relative" href="/">
-            <i class="bi bi-house-door me-1"></i> Home
+    <nav class="navbar navbar-expand-lg shadow-sm fixed-top" style="background-color: #2581dc;">
+    <div class="container">
+        <a class="navbar-brand fw-bold text-white" href="/">
+            <i class="bi bi-wallet2 me-2"></i>ExpenseTracker
         </a>
-    </li>
-    <li class="nav-item mx-2">
-        <a class="nav-link text-white fw-semibold position-relative" href="{% url 'expenses:dashboard' %}">
-            <i class="bi bi-speedometer2 me-1"></i> Dashboard
-        </a>
-    </li>
-    <li class="nav-item mx-2">
-        <a class="nav-link text-white fw-semibold position-relative" href="{% url 'accounts:login' %}">
-            <i class="bi bi-box-arrow-in-right me-1"></i> Login
-        </a>
-    </li>
-    <li class="nav-item mx-2">
-        <a class="nav-link text-white fw-semibold position-relative" href="{% url 'accounts:signup' %}">
-            <i class="bi bi-person-plus me-1"></i> Signup
-        </a>
-    </li>
-</ul>
+        <button class="navbar-toggler text-white border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+            <span class="navbar-toggler-icon"></span>
+        </button>
 
-            </div>
+        <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
+            <ul class="navbar-nav align-items-center">
+                <li class="nav-item mx-2">
+                    <a class="nav-link text-white fw-semibold position-relative" href="/">
+                        <i class="bi bi-house-door me-1"></i> Home
+                    </a>
+                </li>
+                <li class="nav-item mx-2">
+                    <a class="nav-link text-white fw-semibold position-relative" href="{% url 'expenses:dashboard' %}">
+                        <i class="bi bi-speedometer2 me-1"></i> Dashboard
+                    </a>
+                </li>
+                <li class="nav-item mx-2">
+                    <a class="nav-link text-white fw-semibold position-relative" href="{% url 'accounts:login' %}">
+                        <i class="bi bi-box-arrow-in-right me-1"></i> Login
+                    </a>
+                </li>
+                <li class="nav-item mx-2">
+                    <a class="btn btn-light text-primary fw-semibold px-3 py-1 rounded-pill" href="{% url 'accounts:signup' %}">
+                        <i class="bi bi-person-plus me-1"></i> Sign Up
+                    </a>
+                </li>
+            </ul>
         </div>
-    </nav>
+    </div>
+</nav>
+
 
      <main class="d-flex flex-column align-items-center justify-content-center gap-3" style="min-height: 100vh; padding-top: 80px;">
         <div class="card shadow p-4 bg-light" style="width: 400px;">
