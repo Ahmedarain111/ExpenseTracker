@@ -20,13 +20,13 @@
         padding: 1.5rem;
         text-align: center;
         color: #fff;
-        box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
         transition: transform 0.2s ease, box-shadow 0.2s ease;
     }
 
     .summary-card:hover {
         transform: translateY(-3px);
-        box-shadow: 0 6px 16px rgba(0,0,0,0.12);
+        box-shadow: 0 6px 16px rgba(0, 0, 0, 0.12);
     }
 
     .summary-card i {
@@ -34,20 +34,36 @@
         margin-bottom: 0.75rem;
     }
 
-    .bg-gradient-success { background: linear-gradient(135deg, #16a34a, #22c55e); }
-    .bg-gradient-primary { background: linear-gradient(135deg, #2563eb, #3b82f6); }
-    .bg-gradient-danger { background: linear-gradient(135deg, #dc2626, #ef4444); }
-    .bg-gradient-warning { background: linear-gradient(135deg, #f59e0b, #fbbf24); color: #1e293b; }
+    .bg-gradient-success {
+        background: linear-gradient(135deg, #16a34a, #22c55e);
+    }
 
-    .chart-card, .table-card, .budget-card {
+    .bg-gradient-primary {
+        background: linear-gradient(135deg, #2563eb, #3b82f6);
+    }
+
+    .bg-gradient-danger {
+        background: linear-gradient(135deg, #dc2626, #ef4444);
+    }
+
+    .bg-gradient-warning {
+        background: linear-gradient(135deg, #f59e0b, #fbbf24);
+        color: #1e293b;
+    }
+
+    .chart-card,
+    .table-card,
+    .budget-card {
         border: none;
         border-radius: 15px;
         background: #fff;
         padding: 1.5rem;
-        box-shadow: 0 3px 10px rgba(0,0,0,0.05);
+        box-shadow: 0 3px 10px rgba(0, 0, 0, 0.05);
     }
 
-    .chart-card h5, .table-card h5, .budget-card h5 {
+    .chart-card h5,
+    .table-card h5,
+    .budget-card h5 {
         font-weight: 600;
         color: #1e293b;
     }
@@ -83,19 +99,19 @@
     }
 
     .chart-card {
-  background: #fff;
-  border-radius: 12px;
-  padding: 20px;
-  box-shadow: 0 2px 10px rgba(0,0,0,0.08);
-  height: 100%;
-}
+        background: #fff;
+        border-radius: 12px;
+        padding: 20px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+        height: 100%;
+    }
 
-.chart-card canvas {
-  max-height: 280px; /* 👈 same height as neighbor */
-  width: 100% !important;
-  height: auto !important;
-}
-
+    .chart-card canvas {
+        max-height: 280px;
+        /* 👈 same height as neighbor */
+        width: 100% !important;
+        height: auto !important;
+    }
 </style>
 {% endblock styles %}
 
@@ -173,18 +189,26 @@
                     <tr>
                         <td>{{ tx.date }}</td>
                         <td>{{ tx.category.name }}</td>
-                        <td>{{ tx.description }}</td>
+                        <td>
+                            {% if tx.description %}
+                            {{ tx.description }}
+                            {% else %}
+                            N/A
+                            {% endif %}
+                        </td>
                         <td><strong>{{ tx.amount }}</strong></td>
                         <td>
                             {% if tx.type == "income" %}
-                                <span class="badge bg-success">Income</span>
+                            <span class="badge bg-success">Income</span>
                             {% else %}
-                                <span class="badge bg-danger">Expense</span>
+                            <span class="badge bg-danger">Expense</span>
                             {% endif %}
                         </td>
                     </tr>
                     {% empty %}
-                    <tr><td colspan="5" class="text-center text-muted">No transactions yet.</td></tr>
+                    <tr>
+                        <td colspan="5" class="text-center text-muted">No transactions yet.</td>
+                    </tr>
                     {% endfor %}
                 </tbody>
             </table>
@@ -195,45 +219,45 @@
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
 
 <script>
-    console.log({{expense_data}})
+    console.log({{ expense_data }})
     const incomeExpenseCtx = document.getElementById('incomeExpenseChart');
     new Chart(incomeExpenseCtx, {
         type: 'bar',
         data: {
-            labels: {{ months|safe }},
-            datasets: [
-                {
-                    label: 'Income',
-                    data: {{ income_data|safe }},
-                    backgroundColor: 'rgba(37, 99, 235, 0.8)'
+            labels: {{ months| safe }},
+        datasets: [
+        {
+            label: 'Income',
+            data: {{ income_data| safe }},
+        backgroundColor: 'rgba(37, 99, 235, 0.8)'
                 },
-                {
-                    label: 'Expenses',
-                    data: {{ expense_data|safe }},
-                    backgroundColor: 'rgba(220, 38, 38, 0.8)'
+        {
+            label: 'Expenses',
+            data: {{ expense_data| safe }},
+        backgroundColor: 'rgba(220, 38, 38, 0.8)'
                 }
-            ]
+    ]
         },
         options: {
-            responsive: true,
-            scales: { y: { beginAtZero: true } }
-        }
+        responsive: true,
+        scales: { y: { beginAtZero: true } }
+    }
     });
 
     const expensePieCtx = document.getElementById('expensePieChart');
     new Chart(expensePieCtx, {
         type: 'doughnut',
         data: {
-            labels: {{ category_labels|safe }},
-            datasets: [{
-                data: {{ category_values|safe }},
-                backgroundColor: ['#2563eb','#dc2626','#f59e0b','#16a34a','#0ea5e9','#9333ea']
+            labels: {{ category_labels| safe }},
+        datasets: [{
+            data: {{ category_values| safe }},
+        backgroundColor: ['#2563eb', '#dc2626', '#f59e0b', '#16a34a', '#0ea5e9', '#9333ea']
             }]
         },
         options: {
-            responsive: true,
-            cutout: '60%'
-        }
+        responsive: true,
+        cutout: '60%'
+    }
     });
 </script>
 {% endblock content %}
