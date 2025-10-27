@@ -19,8 +19,7 @@
 
             <div class="text-start px-4">
                 <p class="mb-2"><strong>Email:</strong> {{ user.email|default:"N/A" }}</p>
-                <p class="mb-2"><strong>Full Name:</strong> {{ user.userprofile.full_name|default:"N/A" }}</p>
-                <p class="mb-2"><strong>Location:</strong> {{ user.userprofile.location|default:"N/A" }}</p>
+                <p class="mb-2"><strong>Full Name:</strong> {{ user.username|default:"N/A"|capfirst }}</p>
                 <p class="mb-2"><strong>Bio:</strong> {{ user.userprofile.bio|default:"No bio added" }}</p>
                 <p class="mb-2"><strong>Joined:</strong> {{ user.date_joined|date:"F j, Y" }}</p>
                 <p class="mb-2"><strong>Last Login:</strong> {{ user.last_login|date:"F j, Y, g:i a" }}</p>
@@ -28,7 +27,6 @@
 
             <hr class="my-4">
 
-            <!-- Stats -->
             <div class="row text-center mb-4">
                 <div class="col">
                     <div class="p-3 bg-light rounded shadow-sm">
