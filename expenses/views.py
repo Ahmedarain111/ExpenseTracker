@@ -6,20 +6,12 @@ from django.contrib.auth.decorators import login_required
 from accounts.models import Profile
 from .forms import TransactionForm, WalletForm
 from django.db.models import Sum
+import json
 from datetime import date
 
 
 def home_view(request):
     return render(request, "home.html")
-
-
-import json
-import calendar
-from datetime import date
-from django.db.models import Sum
-from django.contrib.auth.decorators import login_required
-from django.shortcuts import render
-from .models import Wallet, Transaction, Category
 
 
 @login_required
@@ -28,7 +20,6 @@ def dashboard_view(request):
     current_month = today.month
     current_year = today.year
 
-    # --- Summary data ---
     total_balance = Wallet.objects.aggregate(total=Sum("balance"))["total"] or 0
     total_income = (
         Transaction.objects.filter(
@@ -45,7 +36,6 @@ def dashboard_view(request):
 
     savings = total_income - total_expenses
 
-    # --- Chart data: Income vs Expense (past 6 months) ---
     months, income_data, expense_data = [], [], []
 
     for i in range(5, -1, -1):
@@ -67,11 +57,9 @@ def dashboard_view(request):
             or 0
         )
 
-        # Convert Decimal → float
         income_data.append(float(income_sum))
         expense_data.append(float(expense_sum))
 
-    # --- Expense Breakdown (pie chart) ---
     category_labels, category_values = [], []
     categories = Category.objects.filter(type="expense")
 
@@ -84,11 +72,10 @@ def dashboard_view(request):
         )
         if spent > 0:
             category_labels.append(cat.name)
-            category_values.append(float(spent))  # Convert Decimal → float
+            category_values.append(float(spent))
 
     recent_transactions = Transaction.objects.order_by("-date")[:10]
 
-    # --- Serialize for JS ---
     context = {
         "total_balance": total_balance,
         "total_income": total_income,
@@ -103,7 +90,6 @@ def dashboard_view(request):
     }
 
     return render(request, "expenses/dashboard.html", context)
-
 
 
 @login_required
@@ -138,7 +124,7 @@ def add_transaction(request):
             transaction = form.save(commit=False)
             transaction.profile = (
                 request.user.profile
-            )  # link transaction to logged-in user
+            )
             transaction.save()
             return redirect("expenses:transactions")
     else:
