@@ -3,6 +3,7 @@ from django.contrib.auth import login, authenticate, logout
 from django.contrib.auth.decorators import login_required
 from .forms import SignupForm, LoginForm
 from .models import Profile
+from expenses.models import Wallet, Transaction
 
 def signup_view(request):
     if request.method == "POST":
@@ -32,7 +33,17 @@ def logout_view(request):
     logout(request)
     return redirect("accounts:login")
 
+@login_required
 def profile_view(request):
-    return render(request, "accounts/profile.html", {"user": request.user})
+    total_wallets = Wallet.objects.count()
+    total_transactions = Transaction.objects.count()
+    total_expenses = Transaction.objects.filter(category__type="expense").count()
+
+    return render(request, "accounts/profile.html", {
+        "total_wallets": total_wallets,
+        "total_transactions": total_transactions,
+        "total_expenses": total_expenses,
+    })
+
 
 
