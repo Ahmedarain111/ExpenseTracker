@@ -109,14 +109,14 @@
         </div>
         <div class="col-md-3 col-sm-6">
             <div class="summary-card bg-gradient-danger">
-                <i class="bi bi-cash-stack"></i>
+                <i class="bi bi-credit-card-2-back"></i>
                 <h3>{{ total_expenses }}</h3>
                 <p>Total Expenses (This Month)</p>
             </div>
         </div>
         <div class="col-md-3 col-sm-6">
-            <div class="summary-card bg-gradient-warning">
-                <i class="bi bi-cash-stack"></i>
+            <div class="summary-card bg-gradient-warning text-white">
+                <i class="bi bi-safe"></i>
                 <h3>{{ savings }}</h3>
                 <p>Savings / Remaining</p>
             </div>
@@ -157,7 +157,7 @@
                     {% for tx in recent_transactions %}
                     <tr>
                         <td>{{ tx.date }}</td>
-                        <td>{{ tx.category }}</td>
+                        <td>{{ tx.category.name }}</td>
                         <td>{{ tx.description }}</td>
                         <td><strong>{{ tx.amount }}</strong></td>
                         <td>
