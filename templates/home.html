@@ -140,7 +140,6 @@ html {
 </head>
 <body>
 
-    <!-- Navbar -->
     <nav class="navbar navbar-expand-lg shadow-sm fixed-top" style="background-color: #2163deff;">
     <div class="container">
         <a class="navbar-brand fw-bold text-white" href="/">
@@ -192,7 +191,6 @@ html {
         </div>
     </section>
 
-    <!-- Features Section -->
     <section class="container mt-5">
         <div class="text-center mb-5">
             <h2 class="fw-bold">Why Use ExpenseTracker?</h2>
@@ -202,21 +200,21 @@ html {
         <div class="row g-4">
             <div class="col-md-4">
                 <div class="feature-card">
-                    <i class="bi bi-graph-up-arrow"></i>
+                    <i class="bi bi-graph-up-arrow" style="color: #2163DE;"></i>
                     <h5 class="fw-bold mt-3">Visual Reports</h5>
                     <p>Easily understand your spending with charts and analytics that give you clear insights.</p>
                 </div>
             </div>
             <div class="col-md-4">
                 <div class="feature-card">
-                    <i class="bi bi-wallet2"></i>
+                    <i class="bi bi-wallet2" style="color: #2163DE;"></i>
                     <h5 class="fw-bold mt-3">Budget Tracking</h5>
                     <p>Set monthly goals and keep your expenses in check with a simple dashboard view.</p>
                 </div>
             </div>
             <div class="col-md-4">
                 <div class="feature-card">
-                    <i class="bi bi-shield-lock"></i>
+                    <i class="bi bi-shield-lock" style="color: #2163DE;"></i>
                     <h5 class="fw-bold mt-3">Secure Data</h5>
                     <p>All your data stays private and secure — only accessible to you.</p>
                 </div>
@@ -227,7 +225,7 @@ html {
     <!-- CTA Section -->
     <section class="text-center my-5">
         <h4 class="fw-bold mb-3">Start Managing Your Money Today</h4>
-        <a href="{% url 'expenses:dashboard' %}" class="btn btn-primary btn-lg">
+        <a href="{% url 'expenses:dashboard' %}" class="btn  btn-lg" style="background-color: #2163DE; color: white;">
             <i class="bi bi-speedometer2 me-2"></i>Go to Dashboard
         </a>
     </section>
