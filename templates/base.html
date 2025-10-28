@@ -144,10 +144,9 @@
             <button class="menu-toggle" id="menuToggle"><i class="bi bi-list"></i></button>
             <h2>Expense Tracker</h2>
         </div>
-        <a href="{% url 'accounts:logout' %}" class="btn btn-light btn-sm d-flex align-items-center gap-1 px-3 rounded-pill">
-        <i class="bi bi-box-arrow-right text-black"></i>
-        <span class="text-black"><strong>Logout</strong></span>
-    </a>
+    <a class="btn btn-light text-dark  px-3 py-1 rounded-pill" href="{% url 'accounts:logout' %}">
+                        <i class="bi bi-box-arrow-right"></i> Logout
+                    </a>
     </header>
 
     <div class="layout">
