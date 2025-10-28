@@ -1,5 +1,6 @@
 {% extends 'base.html' %}
 {% load static %}
+{% load humanize %}
 
 {% block title %}Dashboard{% endblock title %}
 
@@ -122,33 +123,32 @@
         <p class="text-muted">Track your income, expenses, and financial goals at a glance.</p>
     </div>
 
-    <!-- Summary Cards -->
     <div class="row g-4 mb-4">
         <div class="col-md-3 col-sm-6">
             <div class="summary-card bg-gradient-success">
                 <i class="bi bi-wallet2"></i>
-                <h3>{{ total_balance }}</h3>
+                <h3>{{ total_balance|intcomma }}</h3>
                 <p>Total Balance</p>
             </div>
         </div>
         <div class="col-md-3 col-sm-6">
             <div class="summary-card bg-gradient-primary">
                 <i class="bi bi-graph-up"></i>
-                <h3>{{ total_income }}</h3>
+                <h3>{{ total_income|intcomma }}</h3>
                 <p>Total Income (This Month)</p>
             </div>
         </div>
         <div class="col-md-3 col-sm-6">
             <div class="summary-card bg-gradient-danger">
                 <i class="bi bi-credit-card-2-back"></i>
-                <h3>{{ total_expenses }}</h3>
+                <h3>{{ total_expenses|intcomma }}</h3>
                 <p>Total Expenses (This Month)</p>
             </div>
         </div>
         <div class="col-md-3 col-sm-6">
             <div class="summary-card bg-gradient-warning text-white">
                 <i class="bi bi-safe"></i>
-                <h3>{{ savings }}</h3>
+                <h3>{{ savings|intcomma }}</h3>
                 <p>Savings / Remaining</p>
             </div>
         </div>
@@ -170,9 +170,11 @@
         </div>
     </div>
 
-    <!-- Recent Transactions -->
     <div class="table-card mb-4">
-        <h5 class="section-title"><i class="bi bi-receipt-cutoff"></i> Recent Transactions</h5>
+        <h5 class="section-title">
+            <i class="bi bi-receipt-cutoff" style="color: white; background-color: #2581DC;"></i>
+            Recent Transactions
+        </h5>
         <div class="table-responsive">
             <table class="table table-hover align-middle">
                 <thead>
@@ -189,31 +191,24 @@
                     <tr>
                         <td>{{ tx.date }}</td>
                         <td>{{ tx.category.name }}</td>
-                        <td>
-                            {% if tx.description %}
-                            {{ tx.description }}
-                            {% else %}
-                            -
-                            {% endif %}
-                        </td>
-                        <td><strong>{{ tx.amount }}</strong></td>
+                        <td>{% if tx.description %}{{ tx.description }}{% else %}-{% endif %}</td>
+                        <td><strong>{{ tx.amount|intcomma }}</strong></td>
                         <td>
                             {% if tx.type == "income" %}
-                            <span class="badge bg-success">Income</span>
+                                <span class="badge bg-success">Income</span>
                             {% else %}
-                            <span class="badge bg-danger">Expense</span>
+                                <span class="badge bg-danger">Expense</span>
                             {% endif %}
                         </td>
                     </tr>
                     {% empty %}
-                    <tr>
-                        <td colspan="5" class="text-center text-muted">No transactions yet.</td>
-                    </tr>
+                    <tr><td colspan="5" class="text-center text-muted">No transactions yet.</td></tr>
                     {% endfor %}
                 </tbody>
             </table>
         </div>
     </div>
+
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
