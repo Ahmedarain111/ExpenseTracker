@@ -4,7 +4,7 @@
 
 {% block content %}
 
-  <h2 class="mb-4" style="color: #2581DC; !important">Add Transaction</h2>
+  <h2 class="mb-4" style="color: #2581DC;">Add Transaction</h2>
 
   <form method="post" novalidate>
     {% csrf_token %}
@@ -12,19 +12,35 @@
       <div class="col-md-6">
         {{ form.wallet.label_tag }}
         {{ form.wallet }}
+        {% if form.wallet.errors %}
+          <div class="text-danger small">{{ form.wallet.errors.0 }}</div>
+        {% endif %}
       </div>
+
       <div class="col-md-6">
         {{ form.category.label_tag }}
         {{ form.category }}
+        {% if form.category.errors %}
+          <div class="text-danger small">{{ form.category.errors.0 }}</div>
+        {% endif %}
       </div>
+
       <div class="col-md-6">
         {{ form.amount.label_tag }}
         {{ form.amount }}
+        {% if form.amount.errors %}
+          <div class="text-danger small">{{ form.amount.errors.0 }}</div>
+        {% endif %}
       </div>
+
       <div class="col-md-6">
         {{ form.date.label_tag }}
         {{ form.date }}
+        {% if form.date.errors %}
+          <div class="text-danger small">{{ form.date.errors.0 }}</div>
+        {% endif %}
       </div>
+
       <div class="col-12">
         {{ form.description.label_tag }}
         {{ form.description }}
@@ -32,6 +48,14 @@
     </div>
 
     <button type="submit" class="btn text-white mt-4" style="background-color: #2581DC;">Save Transaction</button>
+
+    {% if form.non_field_errors %}
+      <div class="alert alert-danger mt-3">
+        {% for error in form.non_field_errors %}
+          <p>{{ error }}</p>
+        {% endfor %}
+      </div>
+    {% endif %}
   </form>
 
 {% endblock %}

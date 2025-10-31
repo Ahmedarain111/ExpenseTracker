@@ -86,10 +86,10 @@
                     </td>
                     <td>{% if t.description %}{{ t.description }}{% else %}—{% endif %}</td>
                     <td class="text-center">
-                        <a href="{% url 'expenses:edit_transaction' t.id %}" class="btn btn-sm btn-outline-primary">
+                        <a href="{% url 'expenses:edit_transaction' t.id %}" class="btn btn-primary text-white">
                             Edit
                         </a>
-                        <a href="{% url 'expenses:delete_transaction' t.id %}" class="btn btn-sm btn-outline-danger">
+                        <a href="{% url 'expenses:delete_transaction' t.id %}" class="btn btn-danger text-white">
                             Delete
                         </a>
                     </td>
@@ -102,7 +102,7 @@
     <div class="text-center py-5 text-muted">
         <i class="bi bi-inbox fs-1 d-block mb-3"></i>
         <p>No transactions found. Start by adding one!</p>
-        <a href="{% url 'expenses:add_transaction' %}" class="btn btn-primary">Add Transaction</a>
+        <a href="{% url 'expenses:add_transaction' %}" class="btn btn-primary" style="background-color: #2581dc;">Add Transaction</a>
     </div>
     {% endif %}
 </div>

@@ -11,4 +11,5 @@ urlpatterns = [
     path('add_wallet/', views.add_wallet, name="add_wallet"),
     path("transactions/edit/<int:transaction_id>/", views.edit_transaction, name="edit_transaction"),
     path("transactions/delete/<int:transaction_id>/", views.delete_transaction, name="delete_transaction"),
+    path("accounts/delete/<int:wallet_id>/", views.delete_wallet, name="delete_wallet"),
 ] 
