@@ -43,7 +43,7 @@
                 </div>
 
                 <div class="col-md-4 d-flex gap-2">
-                    <button type="submit" class="btn btn-primary flex-fill">
+                    <button type="submit" class="btn btn-primary flex-fill" style="background-color: #2581dc;">
                         <i class="bi bi-check2-circle"></i> Apply
                     </button>
                     <a href="{% url 'expenses:transactions' %}" class="btn btn-outline-secondary flex-fill">
@@ -86,7 +86,7 @@
                     </td>
                     <td>{% if t.description %}{{ t.description }}{% else %}—{% endif %}</td>
                     <td class="text-center">
-                        <a href="{% url 'expenses:edit_transaction' t.id %}" class="btn btn-primary text-white">
+                        <a href="{% url 'expenses:edit_transaction' t.id %}" class="btn btn-primary text-white" style="background-color: #2581dc;">
                             Edit
                         </a>
                         <a href="{% url 'expenses:delete_transaction' t.id %}" class="btn btn-danger text-white">
