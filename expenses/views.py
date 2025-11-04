@@ -14,7 +14,6 @@ from datetime import timedelta
 def home_view(request):
     return render(request, "home.html")
 
-
 @login_required
 def dashboard_view(request):
     profile = request.user.profile
@@ -23,11 +22,14 @@ def dashboard_view(request):
     current_year = today.year
 
     user_wallets = Wallet.objects.filter(profile=profile)
-    user_transactions = Transaction.objects.filter(profile=profile)
+
+    all_transactions = Transaction.objects.filter(profile=profile)
+
+    user_transactions = all_transactions.filter(date__lte=today)
 
     total_balance = user_wallets.aggregate(total=Sum("balance"))["total"] or 0
     total_income = (
-        user_transactions.filter(
+        all_transactions.filter(
             category__type="income",
             date__month=current_month,
             date__year=current_year,
@@ -35,14 +37,13 @@ def dashboard_view(request):
         or 0
     )
     total_expenses = (
-        user_transactions.filter(
+        all_transactions.filter(
             category__type="expense",
             date__month=current_month,
             date__year=current_year,
         ).aggregate(total=Sum("amount"))["total"]
         or 0
     )
-
     savings = total_income - total_expenses
 
     months, income_data, expense_data = [], [], []
@@ -70,7 +71,6 @@ def dashboard_view(request):
 
     category_labels, category_values = [], []
     categories = Category.objects.filter(type="expense")
-
     for cat in categories:
         spent = (
             user_transactions.filter(
