@@ -8,6 +8,7 @@ from .forms import TransactionForm, WalletForm
 from django.db.models import Sum
 from datetime import date
 import calendar, json
+from datetime import timedelta
 
 
 def home_view(request):
@@ -102,8 +103,11 @@ def dashboard_view(request):
 
 
 def transactions_view(request):
-    transactions = Transaction.objects.filter(profile=request.user.profile)
-    wallets = Wallet.objects.filter(profile=request.user.profile)
+    profile = request.user.profile
+    today = date.today()
+
+    transactions = Transaction.objects.filter(profile=profile, date__lte=today)
+    wallets = Wallet.objects.filter(profile=profile)
 
     wallet_id = request.GET.get("wallet")
     sort_option = request.GET.get("sort")
@@ -119,6 +123,8 @@ def transactions_view(request):
         transactions = transactions.order_by("date")
     elif sort_option == "date_desc":
         transactions = transactions.order_by("-date")
+    else:
+        transactions = transactions.order_by("-date", "-created_at")
 
     return render(
         request,
@@ -150,6 +156,29 @@ def add_transaction(request):
             transaction = form.save(commit=False)
             transaction.profile = profile
             transaction.save()
+
+            if transaction.is_recurring and transaction.recurring_frequency:
+                next_date = transaction.get_next_occurrence()
+                end_date = transaction.recurrence_end_date
+
+                while next_date and (not end_date or next_date <= end_date):
+                    Transaction.objects.create(
+                        profile=profile,
+                        wallet=transaction.wallet,
+                        category=transaction.category,
+                        amount=transaction.amount,
+                        description=f"(Recurring) {transaction.description}",
+                        is_recurring=False,
+                        date=next_date,
+                    )
+                    next_date += {
+                        "daily": timedelta(days=1),
+                        "weekly": timedelta(weeks=1),
+                        "monthly": timedelta(days=30),
+                        "yearly": timedelta(days=365),
+                    }.get(transaction.recurring_frequency, timedelta(days=0))
+
+            messages.success(request, "Transaction added successfully!")
             return redirect("expenses:transactions")
     else:
         form = TransactionForm(profile=profile)

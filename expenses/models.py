@@ -1,6 +1,7 @@
 from django.db import models
 from accounts.models import Profile
 from django.utils import timezone
+from datetime import timedelta
 
 
 class Wallet(models.Model):
@@ -36,10 +37,28 @@ class Transaction(models.Model):
         Category, on_delete=models.SET_NULL, null=True, blank=True
     )
 
-    amount = models.DecimalField(max_digits=10, decimal_places=2, default=0)  # type: ignore
+    amount = models.DecimalField(max_digits=10, decimal_places=2, default=0)
     description = models.TextField("Transaction Description", blank=True)
 
-    date = models.DateField("Transaction Date", default=timezone.now())
+    is_recurring = models.BooleanField("Is Recurring", default=False)
+    recurring_frequency = models.CharField(
+        max_length=20,
+        blank=True,
+        null=True,
+        choices=[
+            ("daily", "Daily"),
+            ("weekly", "Weekly"),
+            ("monthly", "Monthly"),
+            ("yearly", "Yearly"),
+        ],
+    )
+    recurrence_end_date = models.DateField(
+        blank=True,
+        null=True,
+        help_text="When the recurrence should stop (optional)",
+    )
+
+    date = models.DateField("Transaction Date", default=timezone.now)
     created_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:
@@ -50,10 +69,19 @@ class Transaction(models.Model):
 
     @property
     def type(self):
-        """Get transaction type (income or expense) from its category."""
         return self.category.type if self.category else "expense"
 
     @property
     def signed_amount(self):
-        """Return positive for income, negative for expense."""
         return self.amount if self.type == "income" else -self.amount
+
+    def get_next_occurrence(self):
+        if not self.is_recurring or not self.recurring_frequency:
+            return None
+        delta_map = {
+            "daily": timedelta(days=1),
+            "weekly": timedelta(weeks=1),
+            "monthly": timedelta(days=30),
+            "yearly": timedelta(days=365),
+        }
+        return self.date + delta_map.get(self.recurring_frequency, timedelta(days=0))

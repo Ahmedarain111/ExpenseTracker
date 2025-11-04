@@ -1,9 +1,10 @@
-{% extends "base.html" %}
+{% extends 'base.html' %}
 
-{% block title %}Add Transaction{% endblock %}
+{% block title %}
+  Add Transaction
+{% endblock %}
 
 {% block content %}
-
   <h2 class="mb-4" style="color: #2581DC;">Add Transaction</h2>
 
   <form method="post" novalidate>
@@ -44,10 +45,41 @@
       <div class="col-12">
         {{ form.description.label_tag }}
         {{ form.description }}
+        {% if form.description.errors %}
+          <div class="text-danger small">{{ form.description.errors.0 }}</div>
+        {% endif %}
+      </div>
+
+      <div class="col-12 mt-3">
+        <div class="form-check">
+          {{ form.is_recurring }}
+          <label class="form-check-label" for="{{ form.is_recurring.id_for_label }}">Make this a recurring transaction</label>
+        </div>
+        {% if form.is_recurring.errors %}
+          <div class="text-danger small">{{ form.is_recurring.errors.0 }}</div>
+        {% endif %}
+      </div>
+
+      <div id="recurrence-fields" class="row g-3 mt-1" style="display: none;">
+        <div class="col-md-6">
+          {{ form.recurring_frequency.label_tag }}
+          {{ form.recurring_frequency }}
+          {% if form.recurring_frequency.errors %}
+            <div class="text-danger small">{{ form.recurring_frequency.errors.0 }}</div>
+          {% endif %}
+        </div>
+
+        <div class="col-md-6">
+          {{ form.recurrence_end_date.label_tag }}
+          {{ form.recurrence_end_date }}
+          {% if form.recurrence_end_date.errors %}
+            <div class="text-danger small">{{ form.recurrence_end_date.errors.0 }}</div>
+          {% endif %}
+        </div>
       </div>
     </div>
 
-    <button type="submit" class="btn text-white mt-4" style="background-color: #2581DC;">Save Transaction</button>
+    <button type="submit" class="btn text-white mt-4" style="background-color: #2581DC;"><i class="fa-solid fa-save me-2"></i>Save Transaction</button>
 
     {% if form.non_field_errors %}
       <div class="alert alert-danger mt-3">
@@ -58,4 +90,19 @@
     {% endif %}
   </form>
 
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      const checkbox = document.querySelector('#id_is_recurring')
+      const recurrenceFields = document.getElementById('recurrence-fields')
+    
+      function toggleRecurrenceFields() {
+        recurrenceFields.style.display = checkbox.checked ? 'flex' : 'none'
+      }
+    
+      if (checkbox) {
+        checkbox.addEventListener('change', toggleRecurrenceFields)
+        toggleRecurrenceFields()
+      }
+    })
+  </script>
 {% endblock %}
