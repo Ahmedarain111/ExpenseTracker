@@ -73,7 +73,7 @@ python manage.py runserver
 
 ---
 
-## 🖼️ Screenshots (Optional)
+## 🖼️ Screenshots
 
 * Dashboard
 <img width="1896" height="873" alt="image" src="https://github.com/user-attachments/assets/c85e1abc-1e60-4ab6-8926-a996b628c5d1" />
