@@ -11,7 +11,7 @@ This project helps users record their expenses, categorize them, view their spen
 * Add, edit, and delete expenses
 * Categorize expenses (Food, Travel, Bills, etc.)
 * Filter and search transaction history
-* Responsive UI built with **Bootstrap 5**
+* Responsive UI built with Bootstrap
 * Dashboard with totals and summaries
 * Charts for spending analytics
 * User authentication (Login / Signup)
