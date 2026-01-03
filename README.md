@@ -1,12 +1,12 @@
-## 🧾 Expense Tracker
+## Expense Tracker
 A simple, clean, and responsive **Expense Tracking Web App** built using **Django**
 This project helps users record their expenses, categorize them, view their spending history, and analyze budgets—all from a modern, mobile-friendly dashboard.
 
 ---
 
-## 🚀 Features
+## Features
 
-### ✅ Core Features
+### Core Features
 
 * Add, edit, and delete expenses
 * Categorize expenses (Food, Travel, Bills, etc.)
@@ -20,7 +20,7 @@ This project helps users record their expenses, categorize them, view their spen
 
 ---
 
-## 🛠️ Tech Stack
+## Tech Stack
 
 | Technology         | Purpose           |
 | ------------------ | ----------------- |
@@ -32,16 +32,16 @@ This project helps users record their expenses, categorize them, view their spen
 
 ---
 
-## ⚙️ Installation & Setup
+## Installation & Setup
 
-### 1️⃣ Clone the Repository
+### 1️. Clone the Repository
 
 ```bash
 git clone https://github.com/your-username/expense-tracker.git
 cd expense-tracker
 ```
 
-### 2️⃣ Create a Virtual Environment
+### 2️. Create a Virtual Environment
 
 ```bash
 python -m venv venv
@@ -49,31 +49,31 @@ source venv/bin/activate   # Linux / Mac
 venv\Scripts\activate      # Windows
 ```
 
-### 3️⃣ Install Dependencies
+### 3️. Install Dependencies
 
 ```bash
 pip install -r requirements.txt
 ```
 
-### 4️⃣ Run Migrations
+### 4️. Run Migrations
 
 ```bash
 python manage.py migrate
 ```
 
-### 5️⃣ Start the Server
+### 5️. Start the Server
 
 ```bash
 python manage.py runserver
 ```
 
-### 6️⃣ Open in Browser
+### 6️. Open in Browser
 
 [http://127.0.0.1:8000/](http://127.0.0.1:8000/)
 
 ---
 
-## 🖼️ Screenshots
+## Screenshots
 
 * Dashboard
 <img width="1896" height="873" alt="image" src="https://github.com/user-attachments/assets/c85e1abc-1e60-4ab6-8926-a996b628c5d1" />
@@ -86,7 +86,7 @@ python manage.py runserver
 
 ---
 
-## 🤝 Contributing
+## Contributing
 
 Contributions are welcome! If you’d like to:
 
@@ -98,6 +98,6 @@ Feel free to submit a pull request.
 
 ---
 
-## 📄 License
+## License
 
 This project is licensed under the **MIT License**.
